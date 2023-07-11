@@ -2,7 +2,7 @@
 title: "Métodos Cuantitativos en Ecología - MCE5"
 subtitle: "EXAMEN FINAL - 2022II"
 author: 'Alvarado Jorge'
-date: "`r Sys.Date()`"
+date: "11/07/2023"
 output:
   html_document:
     toc: yes
@@ -54,6 +54,7 @@ En el archivo `"glm.xlsx"` tiene tres datos:
 
 - leishmania: en una infección con leishmania cuando se analiza el tejido qué sucede con la concentración de algunas células y si están o no afectadas. 
 
+
 - disease: cómo la edad afecta a diferentes características dicotómicas. 
 
 Realice los siguientes análisis: 
@@ -67,17 +68,49 @@ Realice los siguientes análisis:
 Realizar los siguientes análisis y respectivas interpretaciones: 
 
 1. Análisis exploratorio.
+##AEDES
+```{r}
+glmaedes <- read_excel("glm.xlsx")
+summary(glmaedes)
+str(glmaedes)
+plot(glmaedes$repetition, glmaedes$aedes)
+```
+##DISEASE
+```{r}
+glm_disease <- read_excel("C:/Users/Usuario/Desktop/IKIAM/5to Semestre/Metodos Cuantitativos/FINAL/mce5_exam2/glm_disease.xlsx")
+summary(glm_disease)
+str(glm_disease)
+plot(glm_disease)
+```
+Se puede apreciar la dispersion de los valores de cada una de las observaciones y variables cuantitativas.
+##LEISHMANIA
+```{r}
+glm_leishmania <- read_excel("C:/Users/Usuario/Desktop/IKIAM/5to Semestre/Metodos Cuantitativos/FINAL/mce5_exam2/glm_leishmania.xlsx")
+summary(glm_leishmania)
+str(glm_leishmania)
+plot(glm_leishmania)
+```
+Es posible observar la distribucion de los datos, con sus valores minimos, maximos, y la observacion de cada variable cuantitativa.
 
 2. Planteamiento de hipótesis.
+
+AEDES: 
+Hn: cada vez que se repite la aplicacion del insecticida, aumenta la cantidad de mosquitos.
+Ho: cada vez que se repite la aplicacion del insecticida, disminuyen las poblaciones de 
+
+DISEASE:
+Hn: la edad no afecta a las caracteristicas dicotómicas.
+Ho: la edad si afecta a las caracteristicas dicotomicas.
+
+LEISHMANIA:
+Hn: no se encontró concentracion de Leishmania ni afectaciones en las celulas estudiadas.
+Ho:se encontró afectaciones y concentración de Lesihmania en las celulas estudiadas.
 
 3. Análisis de regresión 
 
 4. Planteamiento del modelo. 
 
 5. Validez del modelo.
-
-
-
 
 
 ## **PREGUNTA 2: Series de tiempo [3 PUNTOS]**
@@ -118,6 +151,7 @@ Seleccione una especie de planta y una especie de animal; asimismo, dos tipos de
 
 - Jaguar: *Panthera onca*
 
+3
 - Palma de cera: *Ceroxylon quindiuense*
 
 - Ceibo: *Ceiba pentandra* 
@@ -127,4 +161,53 @@ Seleccione una especie de planta y una especie de animal; asimismo, dos tipos de
 - Chirimoya: *Anona cherimola*
 
 Luego realice un análisis espacial de distribución de la especie en Ecuador continental en base a los datos de presencia del GBIF (use rgbif para descargar la data). Explique el resultado y compare la diferencia entre la salida de los dos modelos. En qué regiones los modelos difieren más en la predicción?   
+
+##BIOGEOGRAFIA DE UNA ESPECIE ANIMAL (PANTHERA ONCA)
+```{r}
+library(rgbif)
+
+library(tidyverse)
+occ = occ_data(scientificName = 'Panthera onca', 
+                limit = 200000, 
+                hasCoordinate = TRUE, 
+                hasGeospatialIssue = FALSE)
+
+occ_col <- filter(occ$data, country == 'Ecuador')
+shp <- raster::getData('GADM', country = 'ECU', level = 1)
+
+gg <- ggplot() +
+  geom_point(data = occ_col, aes(x = decimalLongitude, y = decimalLatitude), color = 'green') +
+  geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = 'red', fill = NA) +
+  coord_fixed(ylim = c(-5, 12.5), xlim = c(-80, -67)) +
+  xlab('Longitud') +
+  ylab('Latitud')
+
+ggsave(plot = gg, filename = 'Panthera onca.png', units = 'cm', width = 12, height = 16, dpi = 300)
+
+```
+
+La especie de Panthera onca presentan una distribucion geográfica a nivel nacional, con mayor presencia en la region amazónica, en especial en la provincia de Orellana.
+
+##BIOGEOGRAFIA DE UNA ESPECIE DE PLANTA (Ceiba pentandra)
+```{r}
+library(rgbif)
+
+library(tidyverse)
+occ = occ_data(scientificName = 'Panthera onca', 
+                limit = 200000, 
+                hasCoordinate = TRUE, 
+                hasGeospatialIssue = FALSE)
+
+occ_col <- filter(occ$data, country == 'Ecuador')
+shp <- raster::getData('GADM', country = 'ECU', level = 1)
+
+gg <- ggplot() +
+  geom_point(data = occ_col, aes(x = decimalLongitude, y = decimalLatitude), color = 'orange') +
+  geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = 'blue', fill = NA) +
+  coord_fixed(ylim = c(-5, 12.5), xlim = c(-80, -67)) +
+  xlab('Longitud') +
+  ylab('Latitud')
+
+ggsave(plot = gg, filename = 'Panthera onca.png', units = 'cm', width = 12, height = 16, dpi = 300)
+```
 
