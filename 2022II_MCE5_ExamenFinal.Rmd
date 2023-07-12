@@ -74,23 +74,30 @@ glmaedes <- read_excel("glm.xlsx")
 summary(glmaedes)
 str(glmaedes)
 plot(glmaedes$repetition, glmaedes$aedes)
+
 ```
+Valores minimos de 44.0 y maximo de 3020.0, de clase caracter. Estructura variada entre caracter y numerica.
 ##DISEASE
 ```{r}
 glm_disease <- read_excel("C:/Users/Usuario/Desktop/IKIAM/5to Semestre/Metodos Cuantitativos/FINAL/mce5_exam2/glm_disease.xlsx")
 summary(glm_disease)
 str(glm_disease)
 plot(glm_disease)
+
 ```
-Se puede apreciar la dispersion de los valores de cada una de las observaciones y variables cuantitativas.
+Entre todas lavariables el valor minimo es 0.0000 y el valor maximo comun es de 1.0000 a diferencia de la edad que es de 74. 
+Todos los valores son numericos.
+
 ##LEISHMANIA
 ```{r}
 glm_leishmania <- read_excel("C:/Users/Usuario/Desktop/IKIAM/5to Semestre/Metodos Cuantitativos/FINAL/mce5_exam2/glm_leishmania.xlsx")
 summary(glm_leishmania)
 str(glm_leishmania)
 plot(glm_leishmania)
+
 ```
-Es posible observar la distribucion de los datos, con sus valores minimos, maximos, y la observacion de cada variable cuantitativa.
+Todos los valores son numericos.
+Se aprecia valores minimos de 0.0000 para todas las variables, y un valor maximo de entre todas las variables de 2.0600. Diferencia de medias, valor de primer y tercer cuartil.
 
 2. Planteamiento de hipótesis.
 
@@ -107,6 +114,22 @@ Hn: no se encontró concentracion de Leishmania ni afectaciones en las celulas e
 Ho:se encontró afectaciones y concentración de Lesihmania en las celulas estudiadas.
 
 3. Análisis de regresión 
+```{r}
+plot(lm(glm_leishmania))
+```
+En el primer plot se observa que los residuos tienen patrones no lineales.
+En el segundo plot se aprecia que los residuos se distribuyan normalmente.
+En el tercer plot se observa que los residuos no se distribuyen por igual a lo largo del rango de los predictores.
+El cuarto plot nos muestra la presencia de outlayers.
+
+```{r}
+plot(lm(glm_disease))
+
+```
+En el primer plot se aprecia un patron lineal.
+En el segundo plot se ve que los residuos no tienen una distribucion normal.
+El tercer plot nos muestra que nos residuos se distribuyen aleatoriamente.
+El cuarto plot nos deja ver la presencia de residuales u outlayers.
 
 4. Planteamiento del modelo. 
 
@@ -191,7 +214,7 @@ La especie de Panthera onca presentan una distribucion geográfica a nivel nacio
 ##BIOGEOGRAFIA DE UNA ESPECIE DE PLANTA (Ceiba pentandra)
 ```{r}
 library(rgbif)
-
+library(geodata)
 library(tidyverse)
 occ = occ_data(scientificName = 'Panthera onca', 
                 limit = 200000, 
@@ -199,7 +222,7 @@ occ = occ_data(scientificName = 'Panthera onca',
                 hasGeospatialIssue = FALSE)
 
 occ_col <- filter(occ$data, country == 'Ecuador')
-shp <- raster::getData('GADM', country = 'ECU', level = 1)
+shp <- raster::geodata('GADM', country = 'ECU', level = 1)
 
 gg <- ggplot() +
   geom_point(data = occ_col, aes(x = decimalLongitude, y = decimalLatitude), color = 'orange') +
