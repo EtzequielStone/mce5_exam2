@@ -152,6 +152,15 @@ Realizar los siguientes análisis y respectivas interpretaciones:
 
 1. Análisis exploratorio: autocorrelación y descomposición, análisis estacional.
 
+
+Autodorrelacion
+```{r}
+resultado_acf <- acf(ts)
+plot(resultado_acf, main = "Autocorrelación")
+print(resultado_acf)
+```
+
+
 2. ARIMA, SARIMA, ETS, NNAR
 
 3. Validez de los modelos.
